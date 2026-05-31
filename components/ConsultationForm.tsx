@@ -131,7 +131,7 @@ export default function ConsultationForm() {
             <p style={{ fontSize: '15px', color: '#6B7C74', lineHeight: 1.7, marginBottom: '28px' }}>
               Thank you for reaching out. Our team will review your request and contact you within 24 hours to schedule your consultation.
             </p>
-            
+            <a
               href="https://wa.me/923235663592"
               target="_blank"
               rel="noopener noreferrer"
@@ -376,7 +376,7 @@ export default function ConsultationForm() {
                     </div>
                     <div style={{ fontSize: '12.5px', color: '#6B7280', lineHeight: 1.6 }}>
                       Something went wrong. Please try again or contact us directly on{' '}
-                      
+                      <a
                         href="https://wa.me/923235663592"
                         target="_blank"
                         rel="noopener noreferrer"
@@ -450,7 +450,7 @@ export default function ConsultationForm() {
                   </div>
                   <div>
                     <div style={{ fontSize: '11.5px', color: '#9BB0A6', marginBottom: '2px' }}>{c.label}</div>
-                    
+                    <a
                       href={c.href}
                       target={c.href.startsWith('http') ? '_blank' : undefined}
                       rel="noopener noreferrer"
