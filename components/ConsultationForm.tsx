@@ -42,6 +42,8 @@ const SERVICES = [
 const EMPLOYEES = ['Under 20', '20–50', '51–100', '101–250', '251–500', '500+']
 const REVENUE = ['Under $1M', '$1M – $5M', '$5M – $20M', '$20M – $50M', '$50M – $100M', '$100M+']
 
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xdajvbrl'
+
 const ease = [0.22, 1, 0.36, 1]
 
 function FieldLabel({ children, required }: { children: React.ReactNode; required?: boolean }) {
@@ -56,6 +58,7 @@ function FieldLabel({ children, required }: { children: React.ReactNode; require
 export default function ConsultationForm() {
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState(false)
 
   const {
     register,
@@ -65,11 +68,41 @@ export default function ConsultationForm() {
 
   const onSubmit = async (data: FormData) => {
     setSubmitting(true)
-    // Replace with your actual form submission logic (API route, email service, CRM, etc.)
-    console.log('Form data:', data)
-    await new Promise((r) => setTimeout(r, 1600))
-    setSubmitting(false)
-    setSubmitted(true)
+    setSubmitError(false)
+
+    try {
+      const response = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          'Full Name': data.fullName,
+          'Job Title': data.jobTitle,
+          'Email': data.email,
+          'WhatsApp Number': data.whatsapp,
+          'Phone Number': data.phone || 'Not provided',
+          'Company Name': data.companyName,
+          'Company Website': data.website || 'Not provided',
+          'Industry': data.industry,
+          'Number of Employees': data.employees || 'Not provided',
+          'Annual Revenue': data.revenue || 'Not provided',
+          'Service of Interest': data.service,
+          'Business Challenge / Goal': data.description,
+        }),
+      })
+
+      if (response.ok) {
+        setSubmitted(true)
+      } else {
+        setSubmitError(true)
+      }
+    } catch (error) {
+      setSubmitError(true)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   if (submitted) {
@@ -98,7 +131,13 @@ export default function ConsultationForm() {
             <p style={{ fontSize: '15px', color: '#6B7C74', lineHeight: 1.7, marginBottom: '28px' }}>
               Thank you for reaching out. Our team will review your request and contact you within 24 hours to schedule your consultation.
             </p>
-            <a href="https://wa.me/923235663592" target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ justifyContent: 'center', width: '100%' }}>
+            
+              href="https://wa.me/923235663592"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary"
+              style={{ justifyContent: 'center', width: '100%' }}
+            >
               Continue on WhatsApp
             </a>
           </motion.div>
@@ -142,7 +181,7 @@ export default function ConsultationForm() {
           >
             <form onSubmit={handleSubmit(onSubmit)} className="card" style={{ padding: '36px 32px' }}>
 
-              {/* Section: You */}
+              {/* Section: Your Information */}
               <div style={{ marginBottom: '32px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px', paddingBottom: '14px', borderBottom: '1px solid #E2EDE8' }}>
                   <User size={14} color="#0A5C38" />
@@ -153,32 +192,53 @@ export default function ConsultationForm() {
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '16px' }}>
                   <div className="form-group">
                     <FieldLabel required>Full Name</FieldLabel>
-                    <input {...register('fullName')} className={`form-input ${errors.fullName ? 'form-input-err' : ''}`} placeholder="Ahmed Al-Rashidi" />
+                    <input
+                      {...register('fullName')}
+                      className={`form-input ${errors.fullName ? 'form-input-err' : ''}`}
+                      placeholder="Ahmed Al-Rashidi"
+                    />
                     {errors.fullName && <span className="form-error">{errors.fullName.message}</span>}
                   </div>
                   <div className="form-group">
                     <FieldLabel required>Job Title</FieldLabel>
-                    <input {...register('jobTitle')} className={`form-input ${errors.jobTitle ? 'form-input-err' : ''}`} placeholder="Chief Executive Officer" />
+                    <input
+                      {...register('jobTitle')}
+                      className={`form-input ${errors.jobTitle ? 'form-input-err' : ''}`}
+                      placeholder="Chief Executive Officer"
+                    />
                     {errors.jobTitle && <span className="form-error">{errors.jobTitle.message}</span>}
                   </div>
                   <div className="form-group">
                     <FieldLabel required>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Mail size={11} /> Email Address</span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <Mail size={11} /> Email Address
+                      </span>
                     </FieldLabel>
-                    <input {...register('email')} type="email" className={`form-input ${errors.email ? 'form-input-err' : ''}`} placeholder="you@company.com" />
+                    <input
+                      {...register('email')}
+                      type="email"
+                      className={`form-input ${errors.email ? 'form-input-err' : ''}`}
+                      placeholder="you@company.com"
+                    />
                     {errors.email && <span className="form-error">{errors.email.message}</span>}
                   </div>
                   <div className="form-group">
                     <FieldLabel required>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Phone size={11} /> WhatsApp Number</span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <Phone size={11} /> WhatsApp Number
+                      </span>
                     </FieldLabel>
-                    <input {...register('whatsapp')} className={`form-input ${errors.whatsapp ? 'form-input-err' : ''}`} placeholder="+966 50 000 0000" />
+                    <input
+                      {...register('whatsapp')}
+                      className={`form-input ${errors.whatsapp ? 'form-input-err' : ''}`}
+                      placeholder="+966 50 000 0000"
+                    />
                     {errors.whatsapp && <span className="form-error">{errors.whatsapp.message}</span>}
                   </div>
                 </div>
               </div>
 
-              {/* Section: Company */}
+              {/* Section: Company Details */}
               <div style={{ marginBottom: '32px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px', paddingBottom: '14px', borderBottom: '1px solid #E2EDE8' }}>
                   <Building2 size={14} color="#0A5C38" />
@@ -189,50 +249,78 @@ export default function ConsultationForm() {
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '16px' }}>
                   <div className="form-group">
                     <FieldLabel required>Company Name</FieldLabel>
-                    <input {...register('companyName')} className={`form-input ${errors.companyName ? 'form-input-err' : ''}`} placeholder="Acme Logistics Co." />
+                    <input
+                      {...register('companyName')}
+                      className={`form-input ${errors.companyName ? 'form-input-err' : ''}`}
+                      placeholder="Acme Logistics Co."
+                    />
                     {errors.companyName && <span className="form-error">{errors.companyName.message}</span>}
                   </div>
                   <div className="form-group">
                     <FieldLabel>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Globe size={11} /> Website</span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <Globe size={11} /> Website
+                      </span>
                     </FieldLabel>
-                    <input {...register('website')} type="url" className={`form-input ${errors.website ? 'form-input-err' : ''}`} placeholder="https://yourcompany.com" />
+                    <input
+                      {...register('website')}
+                      type="url"
+                      className={`form-input ${errors.website ? 'form-input-err' : ''}`}
+                      placeholder="https://yourcompany.com"
+                    />
                     {errors.website && <span className="form-error">{errors.website.message}</span>}
                   </div>
                   <div className="form-group">
                     <FieldLabel required>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Briefcase size={11} /> Industry</span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <Briefcase size={11} /> Industry
+                      </span>
                     </FieldLabel>
-                    <select {...register('industry')} className={`form-input ${errors.industry ? 'form-input-err' : ''}`}>
+                    <select
+                      {...register('industry')}
+                      className={`form-input ${errors.industry ? 'form-input-err' : ''}`}
+                    >
                       <option value="">Select your industry</option>
-                      {INDUSTRIES.map((i) => <option key={i} value={i}>{i}</option>)}
+                      {INDUSTRIES.map((i) => (
+                        <option key={i} value={i}>{i}</option>
+                      ))}
                     </select>
                     {errors.industry && <span className="form-error">{errors.industry.message}</span>}
                   </div>
                   <div className="form-group">
                     <FieldLabel>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Users size={11} /> Number of Employees</span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <Users size={11} /> Number of Employees
+                      </span>
                     </FieldLabel>
                     <select {...register('employees')} className="form-input">
                       <option value="">Select range</option>
-                      {EMPLOYEES.map((e) => <option key={e} value={e}>{e}</option>)}
+                      {EMPLOYEES.map((e) => (
+                        <option key={e} value={e}>{e}</option>
+                      ))}
                     </select>
                   </div>
                   <div className="form-group">
                     <FieldLabel>Annual Revenue (USD)</FieldLabel>
                     <select {...register('revenue')} className="form-input">
                       <option value="">Select range</option>
-                      {REVENUE.map((r) => <option key={r} value={r}>{r}</option>)}
+                      {REVENUE.map((r) => (
+                        <option key={r} value={r}>{r}</option>
+                      ))}
                     </select>
                   </div>
                   <div className="form-group">
                     <FieldLabel>Phone Number</FieldLabel>
-                    <input {...register('phone')} className="form-input" placeholder="+966 50 000 0000" />
+                    <input
+                      {...register('phone')}
+                      className="form-input"
+                      placeholder="+966 50 000 0000"
+                    />
                   </div>
                 </div>
               </div>
 
-              {/* Section: Requirements */}
+              {/* Section: Project Requirements */}
               <div style={{ marginBottom: '28px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px', paddingBottom: '14px', borderBottom: '1px solid #E2EDE8' }}>
                   <MessageSquare size={14} color="#0A5C38" />
@@ -243,9 +331,14 @@ export default function ConsultationForm() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   <div className="form-group">
                     <FieldLabel required>Service of Interest</FieldLabel>
-                    <select {...register('service')} className={`form-input ${errors.service ? 'form-input-err' : ''}`}>
+                    <select
+                      {...register('service')}
+                      className={`form-input ${errors.service ? 'form-input-err' : ''}`}
+                    >
                       <option value="">Select a service</option>
-                      {SERVICES.map((s) => <option key={s} value={s}>{s}</option>)}
+                      {SERVICES.map((s) => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
                     </select>
                     {errors.service && <span className="form-error">{errors.service.message}</span>}
                   </div>
@@ -263,7 +356,41 @@ export default function ConsultationForm() {
                 </div>
               </div>
 
-              {/* Submit */}
+              {/* Error Message */}
+              {submitError && (
+                <div style={{
+                  marginBottom: '20px', padding: '14px 18px',
+                  background: '#FEF2F2', border: '1px solid #FECACA',
+                  borderRadius: '9px', display: 'flex', alignItems: 'flex-start', gap: '10px',
+                }}>
+                  <div style={{ flexShrink: 0, marginTop: '1px' }}>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <circle cx="8" cy="8" r="7" stroke="#DC2626" strokeWidth="1.5" />
+                      <path d="M8 4.5V8.5" stroke="#DC2626" strokeWidth="1.5" strokeLinecap="round" />
+                      <circle cx="8" cy="11" r="0.75" fill="#DC2626" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '13px', fontWeight: 600, color: '#DC2626', marginBottom: '3px' }}>
+                      Submission Failed
+                    </div>
+                    <div style={{ fontSize: '12.5px', color: '#6B7280', lineHeight: 1.6 }}>
+                      Something went wrong. Please try again or contact us directly on{' '}
+                      
+                        href="https://wa.me/923235663592"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: '#0A5C38', fontWeight: 600, textDecoration: 'none' }}
+                      >
+                        WhatsApp
+                      </a>
+                      .
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={submitting}
@@ -307,7 +434,7 @@ export default function ConsultationForm() {
             transition={{ duration: 0.7, delay: 0.2, ease }}
             style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}
           >
-            {/* Contact info */}
+            {/* Contact Info */}
             <div className="card" style={{ padding: '24px' }}>
               <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: '15px', color: '#0C1A12', marginBottom: '18px' }}>
                 Direct Contact
@@ -323,7 +450,10 @@ export default function ConsultationForm() {
                   </div>
                   <div>
                     <div style={{ fontSize: '11.5px', color: '#9BB0A6', marginBottom: '2px' }}>{c.label}</div>
-                    <a href={c.href} target={c.href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer"
+                    
+                      href={c.href}
+                      target={c.href.startsWith('http') ? '_blank' : undefined}
+                      rel="noopener noreferrer"
                       style={{ fontSize: '13.5px', color: '#374740', textDecoration: 'none', fontWeight: 500, wordBreak: 'break-all', transition: 'color 0.2s' }}
                       onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = '#0A5C38' }}
                       onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = '#374740' }}
@@ -335,7 +465,7 @@ export default function ConsultationForm() {
               ))}
             </div>
 
-            {/* What to expect */}
+            {/* What Happens Next */}
             <div className="card" style={{ padding: '24px', background: '#EEF7F2', border: '1px solid rgba(10,92,56,0.14)' }}>
               <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: '15px', color: '#0C1A12', marginBottom: '16px' }}>
                 What Happens Next
