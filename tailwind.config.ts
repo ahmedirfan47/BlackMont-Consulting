@@ -10,6 +10,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         display: ['Syne', 'sans-serif'],
+        serif: ['Cormorant Garamond', 'Georgia', 'serif'],
         sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },

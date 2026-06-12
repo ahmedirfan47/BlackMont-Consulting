@@ -1,49 +1,53 @@
-
 'use client'
 
 import { motion } from 'framer-motion'
 import { ArrowRight, MessageCircle } from 'lucide-react'
 
-const ease = [0.22, 1, 0.36, 1]
+const ease: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
 export default function CTABanner() {
   return (
     <section
-      style={{
-        background: '#0A5C38',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
       className="section-sm"
+      style={{ background: 'linear-gradient(150deg, #0A5C38 0%, #073D27 100%)', position: 'relative', overflow: 'hidden' }}
     >
-      {/* Pattern */}
+      {/* Dot pattern */}
+      <div className="dot-pattern" style={{ position: 'absolute', inset: 0, opacity: 0.1 }} />
+
+      {/* Gold accent top border */}
       <div
-        className="dot-pattern"
-        style={{ position: 'absolute', inset: 0, opacity: 0.1 }}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '2px',
+          background: 'linear-gradient(90deg, transparent, #B8962E 50%, transparent)',
+        }}
       />
 
+      {/* Decorative circles */}
       <div
         style={{
           position: 'absolute',
           top: '-80px',
           right: '-80px',
-          width: '400px',
-          height: '400px',
+          width: '360px',
+          height: '360px',
           borderRadius: '50%',
-          background: 'rgba(255,255,255,0.04)',
+          background: 'rgba(255,255,255,0.03)',
           pointerEvents: 'none',
         }}
       />
-
       <div
         style={{
           position: 'absolute',
           bottom: '-60px',
           left: '-40px',
-          width: '300px',
-          height: '300px',
+          width: '280px',
+          height: '280px',
           borderRadius: '50%',
-          background: 'rgba(255,255,255,0.03)',
+          background: 'rgba(184,150,46,0.06)',
           pointerEvents: 'none',
         }}
       />
@@ -62,58 +66,41 @@ export default function CTABanner() {
             gap: '32px',
           }}
         >
-          <div style={{ maxWidth: '600px' }}>
+          <div style={{ maxWidth: '620px' }}>
             <div
               style={{
-                fontFamily: 'JetBrains Mono, monospace',
-                fontSize: '10.5px',
-                fontWeight: 600,
-                color: 'rgba(255,255,255,0.5)',
+                fontFamily: 'Cormorant Garamond, serif',
+                fontStyle: 'italic',
+                fontSize: '14px',
+                color: '#B8962E',
                 letterSpacing: '0.1em',
-                textTransform: 'uppercase',
                 marginBottom: '14px',
               }}
             >
               Ready to Transform Your Business?
             </div>
-
             <h2
               style={{
                 fontFamily: 'Syne, sans-serif',
                 fontWeight: 800,
-                fontSize: 'clamp(26px, 3.8vw, 44px)',
+                fontSize: 'clamp(26px, 3.8vw, 46px)',
                 color: '#FFFFFF',
                 letterSpacing: '-0.035em',
-                lineHeight: 1.1,
+                lineHeight: 1.08,
                 marginBottom: '16px',
               }}
             >
-              Let's Build Something
+              Let&apos;s Build Something
               <br />
               Exceptional Together
             </h2>
-
-            <p
-              style={{
-                fontSize: '16px',
-                color: 'rgba(255,255,255,0.65)',
-                lineHeight: 1.7,
-              }}
-            >
-              Join ambitious businesses across Pakistan and the GCC that trust
-              BlackMont to deliver real strategic, operational, and technology
-              transformation.
+            <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.6)', lineHeight: 1.7 }}>
+              Join ambitious businesses across Pakistan and the GCC that trust Crescent
+              Consulting to deliver strategic, operational, and technology transformation.
             </p>
           </div>
 
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '12px',
-              flexShrink: 0,
-            }}
-          >
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', flexShrink: 0 }}>
             <a
               href="#contact"
               style={{
@@ -126,29 +113,23 @@ export default function CTABanner() {
                 fontFamily: 'Inter, sans-serif',
                 fontWeight: 700,
                 fontSize: '14px',
-                borderRadius: '9px',
+                borderRadius: '10px',
                 textDecoration: 'none',
-                transition:
-                  'background 0.22s, box-shadow 0.22s, transform 0.18s',
                 letterSpacing: '-0.01em',
+                transition: 'background 0.22s, transform 0.18s',
               }}
               onMouseEnter={(e) => {
-                ;(e.currentTarget as HTMLAnchorElement).style.background =
-                  '#F0F0F0'
-                ;(e.currentTarget as HTMLAnchorElement).style.transform =
-                  'translateY(-1px)'
+                ;(e.currentTarget as HTMLAnchorElement).style.background = '#F0F0F0'
+                ;(e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(-1px)'
               }}
               onMouseLeave={(e) => {
-                ;(e.currentTarget as HTMLAnchorElement).style.background =
-                  '#FFFFFF'
-                ;(e.currentTarget as HTMLAnchorElement).style.transform =
-                  'translateY(0)'
+                ;(e.currentTarget as HTMLAnchorElement).style.background = '#FFFFFF'
+                ;(e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(0)'
               }}
             >
               Book Free Consultation
               <ArrowRight size={16} />
             </a>
-
             <a
               href="https://wa.me/923235663592"
               target="_blank"
@@ -163,27 +144,20 @@ export default function CTABanner() {
                 fontFamily: 'Inter, sans-serif',
                 fontWeight: 600,
                 fontSize: '14px',
-                borderRadius: '9px',
-                border: '1.5px solid rgba(255,255,255,0.3)',
+                borderRadius: '10px',
+                border: '1.5px solid rgba(255,255,255,0.28)',
                 textDecoration: 'none',
-                transition:
-                  'border-color 0.22s, background 0.22s, transform 0.18s',
+                transition: 'border-color 0.22s, background 0.22s, transform 0.18s',
               }}
               onMouseEnter={(e) => {
-                ;(e.currentTarget as HTMLAnchorElement).style.borderColor =
-                  'rgba(255,255,255,0.6)'
-                ;(e.currentTarget as HTMLAnchorElement).style.background =
-                  'rgba(255,255,255,0.06)'
-                ;(e.currentTarget as HTMLAnchorElement).style.transform =
-                  'translateY(-1px)'
+                ;(e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,0.56)'
+                ;(e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,255,255,0.07)'
+                ;(e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(-1px)'
               }}
               onMouseLeave={(e) => {
-                ;(e.currentTarget as HTMLAnchorElement).style.borderColor =
-                  'rgba(255,255,255,0.3)'
-                ;(e.currentTarget as HTMLAnchorElement).style.background =
-                  'transparent'
-                ;(e.currentTarget as HTMLAnchorElement).style.transform =
-                  'translateY(0)'
+                ;(e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,0.28)'
+                ;(e.currentTarget as HTMLAnchorElement).style.background = 'transparent'
+                ;(e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(0)'
               }}
             >
               <MessageCircle size={16} />
@@ -195,4 +169,3 @@ export default function CTABanner() {
     </section>
   )
 }
-

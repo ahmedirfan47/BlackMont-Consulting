@@ -11,6 +11,7 @@ import FAQ from '@/components/FAQ'
 import CTABanner from '@/components/CTABanner'
 import ConsultationForm from '@/components/ConsultationForm'
 import Footer from '@/components/Footer'
+import WhatsAppButton from '@/components/WhatsAppButton'
 
 export default function Home() {
   return (
@@ -28,6 +29,7 @@ export default function Home() {
       <CTABanner />
       <ConsultationForm />
       <Footer />
+      <WhatsAppButton />
     </main>
   )
 }
